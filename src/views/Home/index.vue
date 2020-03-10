@@ -1,41 +1,44 @@
 <template>
   <el-container class="home-container">
-    <el-aside width="200px">
+    <el-aside :width="isOpen?'200px':'64px'">
       <!-- logo -->
-      <div class="logo"></div>
+      <div class="logo" :class="{smallImg:!isOpen}"></div>
       <!-- 菜单 -->
       <el-menu
-        default-active="1"
+        default-active="/"
         background-color="#002033"
         text-color="#fff"
         active-text-color="#ffd04b"
         style="border-right:none"
+        :collapse='!isOpen'
+        :collapse-transition='false'
+        router
       >
-        <el-menu-item index="1">
+        <el-menu-item index="/">
           <i class="el-icon-s-home"></i>
           <span slot="title">首页</span>
         </el-menu-item>
-        <el-menu-item index="2">
+        <el-menu-item index="/article">
           <i class="el-icon-document"></i>
           <span slot="title">内容管理</span>
         </el-menu-item>
-        <el-menu-item index="3">
+        <el-menu-item index="/image">
           <i class="el-icon-picture"></i>
           <span slot="title">素材管理</span>
         </el-menu-item>
-        <el-menu-item index="4">
+        <el-menu-item index="/publish">
           <i class="el-icon-s-promotion"></i>
           <span slot="title">发布文章</span>
         </el-menu-item>
-        <el-menu-item index="5">
+        <el-menu-item index="/comment">
           <i class="el-icon-chat-dot-round"></i>
           <span slot="title">评论管理</span>
         </el-menu-item>
-        <el-menu-item index="6">
+        <el-menu-item index="/fans">
           <i class="el-icon-present"></i>
           <span slot="title">粉丝管理</span>
         </el-menu-item>
-        <el-menu-item index="7">
+        <el-menu-item index="/setting">
           <i class="el-icon-setting"></i>
           <span slot="title">个人设置</span>
         </el-menu-item>
@@ -44,7 +47,7 @@
     <el-container>
       <el-header>
         <!-- 图标 -->
-        <span class="el-icon-s-fold icon"></span>
+        <span class="el-icon-s-fold icon" @click="toggleMenu"></span>
         <!-- 文字 -->
         <span class="text">江苏传智播客科技有限公司</span>
         <!-- 下拉列表 -->
@@ -69,7 +72,20 @@
 </template>
 
 <script>
-export default {}
+export default {
+  data () {
+    return {
+      // 是否切换
+      isOpen: true
+    }
+  },
+  methods: {
+    //  侧边栏切换
+    toggleMenu () {
+      this.isOpen = !this.isOpen
+    }
+  }
+}
 </script>
 
 <style scoped lang='less'>
@@ -86,6 +102,10 @@ export default {}
       height: 60px;
       background: #002244 url("../../assets/logo_admin.png") no-repeat center /
         140px auto;
+    }
+    .smallImg {
+        background-image: url('../../assets/logo_admin_01.png');
+        background-size: 36px auto;
     }
   }
   .el-header {

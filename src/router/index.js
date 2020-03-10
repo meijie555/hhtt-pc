@@ -3,6 +3,7 @@ import Vue from 'vue'
 import Login from '@/views/Login'
 import Home from '@/views/Home'
 import Welcome from '@/views/Welcome'
+import notFound from '@/views/404'
 
 Vue.use(VueRouter)
 
@@ -18,7 +19,8 @@ const router = new VueRouter({
         // 欢迎
         { path: '/', component: Welcome }
       ]
-    }
+    },
+    { path: '*', component: notFound }
   ]
 })
 
