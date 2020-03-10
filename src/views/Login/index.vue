@@ -60,7 +60,13 @@ export default {
     login (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          console.log('ok')
+          this.$http.post('authorizations', this.LoginForm).then(res => {
+            // 成功跳转页面
+            this.$router.push('/')
+          }).catch(() => {
+            // 提示错误
+            this.$message.error('手机号或验证码错误')
+          })
         }
       })
     }
