@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import local from '@/utils/local'
 export default {
   data () {
     // 手机号验证
@@ -39,8 +40,8 @@ export default {
     }
     return {
       LoginForm: {
-        mobile: '',
-        code: ''
+        mobile: '13911111111',
+        code: '246810'
       },
       // 登录校验
       LoginRules: {
@@ -61,6 +62,8 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.$http.post('authorizations', this.LoginForm).then(res => {
+            // c存储用户信息
+            local.setUser(res.data.data)
             // 成功跳转页面
             this.$router.push('/')
           }).catch(() => {
