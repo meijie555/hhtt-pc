@@ -63,7 +63,9 @@ export default {
         if (valid) {
           // 以下代码可能出现异常（报错）  使用try{ 可能报错代码 }catch(e){ 处理错误 }
           try {
-            const { data: { data } } = await this.$http.post('authorizations', this.LoginForm)
+            const {
+              data: { data }
+            } = await this.$http.post('authorizations', this.LoginForm)
             local.setUser(data)
             this.$router.push('/')
           } catch (e) {
