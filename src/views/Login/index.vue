@@ -59,17 +59,16 @@ export default {
   methods: {
     // 登录
     login (formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(async valid => {
         if (valid) {
-          this.$http.post('authorizations', this.LoginForm).then(res => {
-            // c存储用户信息
-            local.setUser(res.data.data)
-            // 成功跳转页面
+          // 以下代码可能出现异常（报错）  使用try{ 可能报错代码 }catch(e){ 处理错误 }
+          try {
+            const { data: { data } } = await this.$http.post('authorizations', this.LoginForm)
+            local.setUser(data)
             this.$router.push('/')
-          }).catch(() => {
-            // 提示错误
+          } catch (e) {
             this.$message.error('手机号或验证码错误')
-          })
+          }
         }
       })
     }

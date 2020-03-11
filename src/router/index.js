@@ -1,5 +1,6 @@
 import VueRouter from 'vue-router'
 import Vue from 'vue'
+import local from '@/utils/local'
 import Login from '@/views/Login'
 import Home from '@/views/Home'
 import Welcome from '@/views/Welcome'
@@ -22,6 +23,13 @@ const router = new VueRouter({
     },
     { path: '*', component: notFound }
   ]
+})
+
+router.beforeEach((to, from, next) => {
+  const user = local.getUser()
+  // 判断是否登录
+  if (to.path !== '/login' && !user) return next('/login')
+  next()
 })
 
 export default router
