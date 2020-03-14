@@ -72,9 +72,9 @@
         </el-table-column>
         <el-table-column label="发布时间" prop="pubdate"></el-table-column>
         <el-table-column label="操作" width="120">
-          <template>
-            <el-button type="primary" icon="el-icon-edit" circle plain></el-button>
-            <el-button type="danger" icon="el-icon-delete" circle plain></el-button>
+          <template slot-scope="scope">
+            <el-button @click="toEdit(scope.row.id)" type="primary" icon="el-icon-edit" circle plain></el-button>
+            <el-button @click="delArticle(scope.row.id)" type="danger" icon="el-icon-delete" circle plain></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -123,6 +123,22 @@ export default {
     this.getArticles()
   },
   methods: {
+    // 删除
+    async delArticle (id) {
+      // 发请求  restfull 接口规则（get post put patch delete）
+      await this.$http.delete(`articles/${id}`)
+      // 提示
+      this.$message.success('删除成功')
+      // 更新列表
+      this.getArticles()
+    },
+    // 去编辑
+    toEdit (id) {
+      // 第一种  query传参方式
+      // this.$router.push(`/publish?id=${id}`)
+      // 第二种  query传参方式
+      this.$router.push({ path: '/publish', query: { id } })
+    },
     // 日期
     changeDate (dateArr) {
       if (dateArr) {
