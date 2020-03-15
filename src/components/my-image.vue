@@ -2,7 +2,7 @@
   <div class="my-image">
     <!-- 按钮 -->
     <div class="btn_box" @click="open">
-      <img src="../assets/default.png" alt />
+      <img :src="value||defaultImage"/>
     </div>
     <!-- 对话框 -->
     <el-dialog :visible.sync="dialogVisible" width="750px">
@@ -29,19 +29,35 @@
             @current-change="pager"
           ></el-pagination>
         </el-tab-pane>
-        <el-tab-pane label="上传图片" name="upload">2</el-tab-pane>
+        <el-tab-pane label="上传图片" name="upload">
+             <!-- 上传组件 -->
+          <el-upload
+            class="avatar-uploader"
+            action="http://ttapi.research.itcast.cn/mp/v1_0/user/images"
+            :headers="headers"
+            name="image"
+            :on-success="handleSuccess"
+            :show-file-list="false"
+          >
+            <img v-if="uploadImageUrl" :src="uploadImageUrl" class="avatar" />
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+        </el-tab-pane>
       </el-tabs>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click="confirmImage">确 定</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
+import local from '@/utils/local'
+import defaultImage from '../assets/default.png'
 export default {
   name: 'my-image',
+  props: ['value'],
   data () {
     return {
       // 控制对话框显示与隐藏
@@ -59,10 +75,47 @@ export default {
       // 总条数
       total: 0,
       // 当前选中的图片地址
-      selectedImageUrl: null
+      selectedImageUrl: null,
+      // 请求头 上传组件
+      headers: {
+        Authorization: `Bearer ${local.getUser().token}`
+      },
+      // 当前上传的图片地址
+      uploadImageUrl: null,
+      // 按钮的默认图片
+      defaultImage
     }
   },
   methods: {
+    // 确认图片
+    confirmImage () {
+      if (this.activeName === 'image') {
+        // 素材库
+        if (!this.selectedImageUrl) {
+          return this.$message.warning('请选中一张图片')
+        }
+        // 给img的src赋值图片地址
+        // this.defaultImage = this.selectedImageUrl
+        this.$emit('input', this.selectedImageUrl)
+        this.dialogVisible = false
+      } else {
+        // 上传图片
+        if (!this.uploadImageUrl) {
+          return this.$message.warning('请上传一张图片')
+        }
+        // 给img的src赋值图片地址
+        // this.defaultImage = this.uploadImageUrl
+        this.$emit('input', this.uploadImageUrl)
+        this.dialogVisible = false
+      }
+    },
+    // 上传成功
+    handleSuccess (res) {
+      // 预览
+      this.uploadImageUrl = res.data.url
+      // 提示
+      this.$message.success('上传成功')
+    },
     // 选中图片
     selectedImage (url) {
       this.selectedImageUrl = url
@@ -95,6 +148,10 @@ export default {
 </script>
 
 <style scoped lang='less'>
+.my-image{
+  display: inline-block;
+  margin-right: 20px;
+}
 .btn_box {
   width: 150px;
   height: 150px;
