@@ -7,6 +7,7 @@ import Welcome from '@/views/Welcome'
 import notFound from '@/views/404'
 import Article from '@/views/Articles'
 import Image from '@/views/Image'
+import Publish from '@/views/Publish'
 
 Vue.use(VueRouter)
 
@@ -24,7 +25,9 @@ const router = new VueRouter({
         // 内容管理
         { path: '/article', component: Article },
         // 素材管理
-        { path: '/image', component: Image }
+        { path: '/image', component: Image },
+        // 发布文章
+        { path: '/publish', component: Publish }
       ]
     },
     { path: '*', component: notFound }
