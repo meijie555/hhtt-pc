@@ -9,6 +9,8 @@ import Article from '@/views/Articles'
 import Image from '@/views/Image'
 import Publish from '@/views/Publish'
 import Comment from '@/views/Comment'
+import Setting from '@/views/Setting'
+import Fans from '@/views/Fans'
 
 Vue.use(VueRouter)
 
@@ -30,7 +32,11 @@ const router = new VueRouter({
         // 发布文章
         { path: '/publish', component: Publish },
         // 评论管理
-        { path: '/comment', component: Comment }
+        { path: '/comment', component: Comment },
+        // 粉丝管理
+        { path: '/fans', component: Fans },
+        // 个人设置
+        { path: '/setting', component: Setting }
       ]
     },
     { path: '*', component: notFound }
