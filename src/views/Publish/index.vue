@@ -2,7 +2,7 @@
   <div class="container-publish">
     <el-card>
       <div slot="header">
-        <my-bread>发布文章</my-bread>
+        <my-bread>{{$route.query.id?'修改':'发布'}}文章</my-bread>
       </div>
       <!-- 表单 -->
       <el-form label-width="120px">
@@ -30,7 +30,11 @@
         <el-form-item label="频道：">
           <my-channel v-model="articleForm.channel_id"></my-channel>
         </el-form-item>
-        <el-form-item>
+        <el-form-item v-if="$route.query.id">
+          <el-button type="success" @click="update(false)">修改</el-button>
+          <el-button @click="update(true)">存入草稿</el-button>
+        </el-form-item>
+        <el-form-item v-else>
           <el-button type="primary" @click="create(false)">发表</el-button>
           <el-button @click="create(true)">存入草稿</el-button>
         </el-form-item>
@@ -75,12 +79,52 @@ export default {
       }
     }
   },
+  watch: {
+    // key===>被监听的(this下的)数据的字段的名字
+    // value ===> 值改变后触发的函数 (newVal,oldVal) 新值  旧值
+    '$route.query.id': function (newVal, oldVal) {
+      if (newVal) {
+        // 填充表单
+        this.getArticle(newVal)
+      } else {
+        // 重置表单
+        this.articleForm = {
+          title: null,
+          cover: {
+            type: 1,
+            images: []
+          },
+          content: null
+        }
+      }
+    }
+  },
+  created () {
+    // 根据地址栏判断是否有id
+    const articleId = this.$route.query.id
+    if (articleId) {
+      // 填充表单
+      this.getArticle(articleId)
+    }
+  },
   methods: {
+    // 获取文章详情
+    async getArticle (id) {
+      const { data: { data } } = await this.$http.get(`articles/${id}`)
+      this.articleForm = data
+    },
     // 新建
     async create (draft) {
       await this.$http.post(`articles?draft=${draft}`, this.articleForm)
       // 成功
       this.$message.success(draft ? '存入草稿成功' : '发表成功')
+      this.$router.push('/article')
+    },
+    // 修改
+    async update (draft) {
+      await this.$http.put(`articles/${this.$route.query.id}?draft=${draft}`, this.articleForm)
+      // 成功
+      this.$message.success(draft ? '存入草稿成功' : '修改成功')
       this.$router.push('/article')
     }
   }
